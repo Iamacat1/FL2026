@@ -39,6 +39,13 @@ class Communication:
         print("客户端第3轮通信开销:", (r3)/8/1024, "KB")
         return r0+ r1 + r2 + r3
 
+    def verify_com_client1(self):
+        r0 = SIG_BIT
+        r1 = SIG_BIT * (self.client_num + 1)
+        r2 = SIG_BIT * (self.client_num + 1)
+        r3 = SIG_BIT * 2
+        return r0 + r1 + r2 + r3
+
     def com_client2_1_1(self):
         # 上传梯度和签名
         r0 = self.client_upload_gra
@@ -55,8 +62,19 @@ class Communication:
         print("客户端第5轮通信开销:", (r5)/8/1024, "KB")
         return r0 + r1 + r2 + r5
     
+    def verify_com_client2_1_1(self):
+        r0 = SIG_BIT
+        r1 = SIG_BIT * (self.client_num + 1)
+        r2 = SIG_BIT * (self.client_num + 1)
+        r5 = (self.vs_proof + self.client_upload_gra
+                           + SIG_BIT + SIG_BIT)
+        return r0 + r1 + r2 + r5
+
     def com_client2_1_2(self):
         return self.com_client2_1_1()
+
+    def verify_com_client2_1_2(self):
+        return self.verify_com_client2_1_1()
 
     def com_client2_2_1(self):
         # 上传梯度和签名
@@ -72,6 +90,13 @@ class Communication:
         request_bit = self.agg_grad + SIG_BIT
         r5 = receive_bit + request_bit
         print("客户端第5轮通信开销:", (r5)/8/1024, "KB")
+        return r0 + r1 + r2 + r5
+
+    def verify_com_client2_2_1(self):
+        r0 = SIG_BIT
+        r1 = SIG_BIT * (self.client_num + 1)
+        r2 = SIG_BIT * (self.client_num + 1)
+        r5 = (self.vs_proof + SIG_BIT)
         return r0 + r1 + r2 + r5
 
     def com_client2_2_2(self):
@@ -91,6 +116,9 @@ class Communication:
         print("客户端第5轮通信开销:", (r5)/8/1024, "KB")
         return  r0 + r1 + r2 + r5
     
+    def verify_com_client2_2_2(self):
+        return self.verify_com_client2_2_1()
+
     def base_com_vs(self):
         receive_client_bit = self.client_upload_gra * self.client_num
         send_to_as_bit = receive_client_bit + SIG_BIT * self.client_num
@@ -190,28 +218,46 @@ class Communication:
         return r2 + r4
 
 if __name__ == "__main__":
-    for config in model_config_list:
+    case1 = []
+    cese2_1_1 = []
+    case2_1_2 = []
+    case2_2_1 = []
+    case2_2_2 = []
+    for config in client_config_list:
         print("客户端数量:", config["client_num"], "模型维度:", config["model_dimension"])
         com = Communication(config)
         print("case1---------------------")
-        print("case1 客户端通信开销:", com.com_client1()/8/1024, "KB")
-        print("case1 VS通信开销:", com.com_vs_1()/8/1024/1024, "MB")
-        print("case1 AS通信开销:", com.com_as_1()/8/1024/1024, "MB")
+        # print("case1 客户端通信开销:", com.com_client1()/8/1024, "KB")
+        # print("case1 VS通信开销:", com.com_vs_1()/8/1024/1024, "MB")
+        # print("case1 AS通信开销:", com.com_as_1()/8/1024/1024, "MB")
+        com1 = com.verify_com_client1()/8/1024/1024
+        case1.append(com1)
 
         print("case2-1-1---------------------")
-        print("case2-1-1 客户端通信开销:", com.com_client2_1_1()/8/1024, "KB")
-        print("case2-1-1 AS通信开销:", com.com_as_2_1_1()/8/1024/1024, "MB")
+        # print("case2-1-1 客户端通信开销:", com.com_client2_1_1()/8/1024, "KB")
+        # print("case2-1-1 AS通信开销:", com.com_as_2_1_1()/8/1024/1024, "MB")
+        com2_1_1 = com.verify_com_client2_1_1()/8/1024/1024
+        cese2_1_1.append(com2_1_1)
 
         print("case2-1-2---------------------")
-        print("case2-1-2 客户端通信开销:", com.com_client2_1_2()/8/1024, "KB")
-        print("case2-1-2 VS通信开销:", com.com_vs_2_1_2()/8/1024/1024, "MB")
+        # print("case2-1-2 客户端通信开销:", com.com_client2_1_2()/8/1024, "KB")
+        # print("case2-1-2 VS通信开销:", com.com_vs_2_1_2()/8/1024/1024, "MB")
+        com2_1_2 = com.verify_com_client2_1_2()/8/1024/1024
+        case2_1_2.append(com2_1_2)
 
         print("case2-2-1---------------------")
-        print("case2-2-1 客户端通信开销:", com.com_client2_2_1()/8/1024, "KB")
-        print("case2-2-1 AS通信开销:", com.com_as_2_2_1()/8/1024/1024, "MB")
+        # print("case2-2-1 客户端通信开销:", com.com_client2_2_1()/8/1024, "KB")
+        # print("case2-2-1 AS通信开销:", com.com_as_2_2_1()/8/1024/1024, "MB")
+        com2_2_1 = com.verify_com_client2_2_1()/8/1024/1024
+        case2_2_1.append(com2_2_1)
 
         print("case2-2-2---------------------")
-        print("case2-2-2 客户端通信开销:", com.com_client2_2_2()/8/1024, "KB")
-        print("case2-2-2 VS通信开销:", com.com_vs_2_2_2()/8/1024/1024, "MB")
-
-        
+        # print("case2-2-2 客户端通信开销:", com.com_client2_2_2()/8/1024, "KB")
+        # print("case2-2-2 VS通信开销:", com.com_vs_2_2_2()/8/1024/1024, "MB")
+        com2_2_2 = com.verify_com_client2_2_2()/8/1024/1024
+        case2_2_2.append(com2_2_2)
+    print("case1=", case1)
+    print("case211=", cese2_1_1)
+    print("case212=", case2_1_2)
+    print("case221=", case2_2_1)
+    print("case222=", case2_2_2)        
