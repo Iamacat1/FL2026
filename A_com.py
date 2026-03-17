@@ -139,6 +139,11 @@ class Communication:
         print("VS第3轮通信开销:", (r3)/8/1024/1024, "MB")
         return r1 + r3
 
+    def verify_com_vs_1(self):
+        r1 = SIG_BIT * (self.client_num + 2*self.client_num + (self.client_num + 1)*self.client_num)
+        r3 = SIG_BIT + SIG_BIT * 2 * self.client_num
+        return r1 + r3
+
     def com_vs_2_1_2(self):
         receive_client_bit = self.client_upload_gra * self.client_num
         send_to_as_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
@@ -153,6 +158,12 @@ class Communication:
         # VS发送自己的聚合结果给所有客户端
         r5 = self.agg_grad * self.client_num
         print("VS第5轮通信开销:", (r5)/8/1024/1024, "MB")
+        return r1 + r3 + r5
+
+    def verify_com_vs_2_1_2(self):
+        r1 = SIG_BIT * (self.client_num + 2*self.client_num + (self.client_num + 1)*self.client_num)
+        r3 = SIG_BIT + self.vs_proof
+        r5 = SIG_BIT * self.client_num
         return r1 + r3 + r5
 
     def com_vs_2_2_2(self):
@@ -173,6 +184,9 @@ class Communication:
         print("VS第5轮通信开销:", (r5)/8/1024/1024, "MB")
         return r1 + r3 + r5
 
+    def verify_com_vs_2_2_2(self):
+        return self.verify_com_vs_2_1_2()
+
     def com_as_1(self):
         # 收到VS发送的每个客户端的梯度和重签名
         receive_vs_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
@@ -184,6 +198,10 @@ class Communication:
         print("AS第2轮通信开销:", (r2)/8/1024/1024, "MB")
         return r2
     
+    def verify_com_as_1(self):
+        r2 = SIG_BIT * (2 * self.client_num + 1 + (self.client_num + 1)*self.client_num)
+        return r2
+
     def com_as_2_1_1(self):
         # 收到VS发送的每个客户端的梯度和重签名
         receive_vs_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
@@ -202,6 +220,16 @@ class Communication:
         print("AS第5轮通信开销:", (r5)/8/1024/1024, "MB")
         return r2 + r4 + r5
     
+    def verify_com_as_2_1_1(self):
+        r2 = SIG_BIT * (2 * self.client_num + 1 + (self.client_num + 1)*self.client_num)
+        receive_proof_bit = self.vs_proof
+        send_client_bit = (self.vs_proof + self.client_upload_gra
+                           + SIG_BIT + SIG_BIT) * self.client_num
+        r4 = receive_proof_bit + send_client_bit
+        r5 = SIG_BIT * self.client_num
+        return r2 + r4 + r5
+        
+
     def com_as_2_2_1(self):
         # 收到VS发送的每个客户端的梯度和重签名
         receive_vs_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
@@ -216,6 +244,14 @@ class Communication:
         r4 = receive_proof_bit + send_client_bit
         print("AS第4轮通信开销:", (r4)/8/1024/1024, "MB")
         return r2 + r4
+
+    def verify_com_as_2_2_1(self):
+        r2 = SIG_BIT * (2 * self.client_num + 1 + (self.client_num + 1)*self.client_num)
+        receive_proof_bit = self.vs_proof
+        send_client_bit = (receive_proof_bit + SIG_BIT) * self.client_num
+        r4 = receive_proof_bit + send_client_bit
+        r5 = SIG_BIT * self.client_num
+        return r2 + r4 + r5
 
 if __name__ == "__main__":
     case1 = []
