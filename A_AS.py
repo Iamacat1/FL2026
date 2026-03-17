@@ -114,5 +114,6 @@ class AS:
     
     def get_time(self):
         print(f"AS各阶段时间：{self.time}")
-        print(f"AS总时间：{sum(self.time)}")
-        return self.time
+        self.total_time = sum(self.time)
+        print(f"AS总时间：{self.total_time}")
+        return self.total_time

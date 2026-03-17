@@ -122,5 +122,6 @@ class VS:
     def get_time(self):
         self.time = [self.resign_time, self.verify_time, self.resign_agg_time + self.resign_correct_agg_time]
         print(f"VS各阶段时间：{self.time}")
-        print(f"VS总时间：{sum(self.time)}")
-        return self.time
+        self.total_time = sum(self.time)
+        print(f"VS总时间：{self.total_time}")
+        return self.total_time
