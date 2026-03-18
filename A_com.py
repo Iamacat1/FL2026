@@ -254,46 +254,64 @@ class Communication:
         return r2 + r4 + r5
 
 if __name__ == "__main__":
-    case1 = []
-    cese2_1_1 = []
-    case2_1_2 = []
-    case2_2_1 = []
-    case2_2_2 = []
-    for config in client_config_list:
+    client_1 = []
+    client_211 = []
+    client_212 = []
+    client_221 = []
+    client_222 = []
+
+    vs_1 = []
+    vs_212 = []
+    vs_222 = []
+
+    as_1 = []
+    as_211 = []
+    as_221 = []
+    for config in model_config_list:
         print("客户端数量:", config["client_num"], "模型维度:", config["model_dimension"])
         com = Communication(config)
         print("case1---------------------")
         # print("case1 客户端通信开销:", com.com_client1()/8/1024, "KB")
         # print("case1 VS通信开销:", com.com_vs_1()/8/1024/1024, "MB")
         # print("case1 AS通信开销:", com.com_as_1()/8/1024/1024, "MB")
-        com1 = com.verify_com_client1()/8/1024/1024
-        case1.append(com1)
+        client_1.append(com.verify_com_client1()/8/1024/1024)
+        vs_1.append(com.verify_com_vs_1()/8/1024/1024)
+        as_1.append(com.verify_com_as_1()/8/1024/1024)
 
         print("case2-1-1---------------------")
         # print("case2-1-1 客户端通信开销:", com.com_client2_1_1()/8/1024, "KB")
         # print("case2-1-1 AS通信开销:", com.com_as_2_1_1()/8/1024/1024, "MB")
-        com2_1_1 = com.verify_com_client2_1_1()/8/1024/1024
-        cese2_1_1.append(com2_1_1)
+        client_211.append(com.verify_com_client2_1_1()/8/1024/1024)
+        as_211.append(com.verify_com_as_2_1_1()/8/1024/1024)
 
         print("case2-1-2---------------------")
         # print("case2-1-2 客户端通信开销:", com.com_client2_1_2()/8/1024, "KB")
         # print("case2-1-2 VS通信开销:", com.com_vs_2_1_2()/8/1024/1024, "MB")
-        com2_1_2 = com.verify_com_client2_1_2()/8/1024/1024
-        case2_1_2.append(com2_1_2)
+        client_212.append(com.verify_com_client2_1_2()/8/1024/1024)
+        vs_212.append(com.verify_com_vs_2_1_2()/8/1024/1024)
 
         print("case2-2-1---------------------")
         # print("case2-2-1 客户端通信开销:", com.com_client2_2_1()/8/1024, "KB")
         # print("case2-2-1 AS通信开销:", com.com_as_2_2_1()/8/1024/1024, "MB")
-        com2_2_1 = com.verify_com_client2_2_1()/8/1024/1024
-        case2_2_1.append(com2_2_1)
+        client_221.append(com.verify_com_client2_2_1()/8/1024/1024)
+        as_221.append(com.verify_com_as_2_2_1()/8/1024/1024)
 
         print("case2-2-2---------------------")
         # print("case2-2-2 客户端通信开销:", com.com_client2_2_2()/8/1024, "KB")
         # print("case2-2-2 VS通信开销:", com.com_vs_2_2_2()/8/1024/1024, "MB")
-        com2_2_2 = com.verify_com_client2_2_2()/8/1024/1024
-        case2_2_2.append(com2_2_2)
-    print("case1=", case1)
-    print("case211=", cese2_1_1)
-    print("case212=", case2_1_2)
-    print("case221=", case2_2_1)
-    print("case222=", case2_2_2)        
+        client_222.append(com.verify_com_client2_2_2()/8/1024/1024)
+        vs_222.append(com.verify_com_vs_2_2_2()/8/1024/1024)
+    print("客户端开销-----------------------------")
+    print("case1=", client_1)
+    print("case211=", client_211)
+    print("case212=", client_212)
+    print("case221=", client_221)
+    print("case222=", client_222)
+    print("VS开销-----------------------------")
+    print("case1=", vs_1)
+    print("case212=", vs_212)
+    print("case222=", vs_222)
+    print("AS开销-----------------------------")
+    print("case1=", as_1)
+    print("case211=", as_211)
+    print("case221=", as_221) 
