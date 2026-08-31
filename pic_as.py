@@ -4,62 +4,74 @@ import numpy as np
 from matplotlib.ticker import FixedLocator, FixedFormatter
 
 def pic_verification(x_ticks, y_ticks, y_visual, y1, y2, y3, y4, y5, x_min, x_max, x_label, y_lable, fig_name):
-    # 创建图形和轴
-    fig, ax = plt.subplots(dpi = 1000, figsize=(6, 5))
+    fig, ax = plt.subplots(dpi=1000, figsize=(6, 5))
     plt.subplots_adjust(0.14, 0.13, 0.98, 0.98)
-    # 设置轴的线条粗细
-    ax.spines['bottom'].set_linewidth(2)  # 设置底部坐标轴的粗细
-    ax.spines['left'].set_linewidth(2)  # 设置左边坐标轴的粗细
-    ax.spines['right'].set_linewidth(2)  # 设置右边坐标轴的粗细
+
+    ax.spines['bottom'].set_linewidth(2)
+    ax.spines['left'].set_linewidth(2)
+    ax.spines['right'].set_linewidth(2)
     ax.spines['top'].set_linewidth(2)
-    # 设置Y轴的刻度位置和标签
-    # 位置使用索引值，使它们在视觉上均匀分布
+
     ax.yaxis.set_major_locator(FixedLocator(range(len(y_ticks))))
     ax.yaxis.set_major_formatter(FixedFormatter(y_visual))
     ax.tick_params(axis='y', labelsize=14)
-    # 设置Y轴的限制，使其刚好包含所有刻度
-    ax.set_xlim(x_min, x_max)
-    ax.set_ylim(0, len(y_ticks)-0.8)
 
     ax.set_xticks(x_ticks)
     ax.set_xticklabels(x_ticks, fontsize=14)
-    # 为了使绘图正确映射，我们需要将实际数据转换为视觉位置
-    # 创建一个映射函数
+
+    # ★ 动态计算柱子宽度：取相邻x刻度间距的 1/7
+    spacing = x_ticks[1] - x_ticks[0] if len(x_ticks) > 1 else 1
+    bar_width = spacing / 7
+
+    # ★ 5组柱子的偏移量
+    num_groups = 5
+    offsets = np.arange(num_groups) - (num_groups - 1) / 2  # [-2, -1, 0, 1, 2]
+
+    # ★ 自动计算合适的x轴范围，确保最左/最右柱子不被裁剪
+    max_offset = abs(offsets).max() * bar_width
+    auto_x_min = x_ticks[0] - max_offset - bar_width * 0.5
+    auto_x_max = x_ticks[-1] + max_offset + bar_width * 0.5
+    # 与用户传入值取并集
+    final_x_min = min(x_min, auto_x_min)
+    final_x_max = max(x_max, auto_x_max)
+    ax.set_xlim(final_x_min, final_x_max)
+
+    ax.set_ylim(0, len(y_ticks) - 0.8)
+
+    # 映射函数
     def value_to_visual(y_value, y_ticks):
-        """将实际Y值转换为视觉位置"""
-        # 找到y_value所在的区间
         for i in range(1, len(y_ticks)):
             if y_ticks[i-1] <= y_value <= y_ticks[i]:
-                # 在区间内线性插值
                 ratio = (y_value - y_ticks[i-1]) / (y_ticks[i] - y_ticks[i-1])
-                return i-1 + ratio
-        # 如果超出范围，使用对数增长估计
+                return i - 1 + ratio
         if y_value > y_ticks[-1]:
             return len(y_ticks) - 1 + np.log(y_value / y_ticks[-1])
-        else:  # y_value < y_ticks[0]
+        else:
             return 0 - np.log(y_ticks[0] / y_value)
 
-    # 转换数据并重新绘制
     visual_y1 = [value_to_visual(yi, y_ticks) for yi in y1]
-    ax.plot(x_ticks, visual_y1, marker='s', markersize=14, linewidth=2, linestyle='--')
     visual_y2 = [value_to_visual(yi, y_ticks) for yi in y2]
-    ax.plot(x_ticks, visual_y2, marker='X', markersize=14, linewidth=2, linestyle='--')
     visual_y3 = [value_to_visual(yi, y_ticks) for yi in y3]
-    ax.plot(x_ticks, visual_y3, marker='^', markersize=14, linewidth=2, linestyle='--')
     visual_y4 = [value_to_visual(yi, y_ticks) for yi in y4]
-    ax.plot(x_ticks, visual_y4, marker='D', markersize=14, linewidth=2)
     visual_y5 = [value_to_visual(yi, y_ticks) for yi in y5]
-    ax.plot(x_ticks, visual_y5, marker='*', markersize=14, linewidth=2)
 
-    # 添加标题和标签
+    # 绘制5组柱子，每组使用不同的x偏移
+    ax.bar([xi + offsets[0] * bar_width for xi in x_ticks], visual_y1,
+           width=bar_width, label='CASE 1')
+    ax.bar([xi + offsets[1] * bar_width for xi in x_ticks], visual_y2,
+           width=bar_width, label='CASE 2-1-1')
+    ax.bar([xi + offsets[2] * bar_width for xi in x_ticks], visual_y3,
+           width=bar_width, label='CASE 2-2-1')
+    ax.bar([xi + offsets[3] * bar_width for xi in x_ticks], visual_y4,
+           width=bar_width, label='FSMSA')
+    ax.bar([xi + offsets[4] * bar_width for xi in x_ticks], visual_y5,
+           width=bar_width, label='VeSAFL')
+
     ax.set_xlabel(x_label, fontsize=16)
     ax.set_ylabel(y_lable, fontsize=16)
-
-    # 添加网格线以便更好地观察
     ax.grid(True, linestyle='--', alpha=0.7)
     plt.rcParams.update({'font.size': 12})
-    ax.legend(['CASE 1', 'CASE 2-1-1', 'CASE 2-2-1',  'FSMSA', 'VeSAFL'], loc='upper left',)
-    # plt.tight_layout()
+    ax.legend(loc='upper left')
     plt.savefig(fig_name)
 
 
