@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import FixedLocator, FixedFormatter
 
-def pic_enc(x_ticks, y_ticks, y_visual, y1, y2, y3, y4, y5, x_min, x_max, x_label, y_lable, fig_name):
+def pic_verification(x_ticks, y_ticks, y_visual, y1, y2, y3, y4, y5, x_min, x_max, x_label, y_lable, fig_name):
     # 创建图形和轴
     fig, ax = plt.subplots(dpi = 1000, figsize=(6, 5))
     plt.subplots_adjust(0.14, 0.13, 0.98, 0.98)
@@ -119,7 +119,7 @@ def pic_total(x_ticks, y_ticks, y_visual, y1, y2, y3, x_min, x_max, x_label, y_l
     plt.savefig(fig_name)
 
 if __name__ == '__main__':
-    # ------验证服务器计算开销对比，客户端100，模型维度2-10w------
+    # ------验证服务器验证计算开销对比，客户端100，模型维度2-10w------
     FSMSA_Initiator = [232.00171732902527, 460.18337178230286, 690.6543874740601, 926.7065870761871, 1150.3378732204437]
     VeSAFL = [271.91, 527.37, 790.70, 1106.98, 1310.42]
     case1 = [0.09600329399108887, 0.11180543899536133, 0.13164544105529785, 0.1785128116607666, 0.1675581932067871]
@@ -128,10 +128,10 @@ if __name__ == '__main__':
     x1 = [2, 4, 6, 8, 10]
     y_ticks = [0, 1, 10, 100, 1000, 10000, 100000]
     y_visual = [0, 1, 10, r'$10^2$', r'$10^3$', r'$10^4$', r'$10^5$']
-    pic_enc(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 1.5, 10.5, "Model Dimension (x10\u2074)", "Verification time (s)",
+    pic_verification(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 1.5, 10.5, "Model Dimension (x10\u2074)", "Verification time (s)",
                 "vs_ver_time_model.pdf")
 
-    # ------验证服务器计算开销对比，模型维度10w，客户端数量20-100------
+    # ------验证服务器验证计算开销对比，模型维度10w，客户端数量20-100------
     FSMSA_Initiator = [248.80251097679138, 475.1769120693207, 698.6869361400604, 924.6689944267273, 1150.3378732204437]
     VeSAFL = [275.45, 554.07, 819.36, 1097.12, 1310.42]
     case1 = [0.03923988342285156, 0.07269287109375, 0.10766959190368652, 0.1352548599243164, 0.17441272735595703]
@@ -140,12 +140,12 @@ if __name__ == '__main__':
     x1 = [20, 40, 60, 80, 100]
     y_ticks = [0, 1, 10, 100, 1000, 10000, 100000]
     y_visual = [0, 1, 10, r'$10^2$', r'$10^3$', r'$10^4$', r'$10^5$']
-    pic_enc(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 15, 105, "Client Number", "Verification time (s)",
+    pic_verification(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 15, 105, "Client Number", "Verification time (s)",
                 "vs_ver_time_client.pdf")
 
 
 
-    # ------验证服务器通信开销对比，模型维度10w，客户端数量20-100------
+    # ------验证服务器验证通信开销对比，模型维度10w，客户端数量20-100------
     FSMSA_Initiator = [1708.9915161132812, 3173.8392333984375, 4638.686950683594, 6103.53466796875, 7568.382385253906]
     VeSAFL = [256.35, 500.49, 744.63, 988.77, 1204.01]
     case1= [0.03179931640625, 0.11236572265625, 0.24176025390625, 0.41998291015625, 0.64703369140625]
@@ -154,10 +154,10 @@ if __name__ == '__main__':
     x1 = [20, 40, 60, 80, 100]
     y_ticks = [0, 1, 10, 100, 1000, 10000, 100000]
     y_visual = [0, 1, 10, r'$10^2$', r'$10^3$', r'$10^4$', r'$10^5$']
-    pic_enc(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 15, 105, "Client Number", "Verification communication (MB)",
+    pic_verification(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 15, 105, "Client Number", "Verification communication (MB)",
                 "vs_ver_com_client.pdf")
     
-    # ------验证服务器通信开销对比，客户端100，模型维度2-10w------
+    # ------验证服务器验证通信开销对比，客户端100，模型维度2-10w------
     FSMSA_Initiator = [1513.6948852539062, 3027.3667602539062, 4541.038635253906, 6054.710510253906, 7568.382385253906]
     VeSAFL = [246.58, 493.16, 739.75, 986.33, 1204.01]
     case1= [0.64703369140625, 0.64703369140625, 0.64703369140625, 0.64703369140625, 0.64703369140625]
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     x1 = [2, 4, 6, 8, 10]
     y_ticks = [0, 1, 10, 100, 1000, 10000, 100000]
     y_visual = [0, 1, 10, r'$10^2$', r'$10^3$', r'$10^4$', r'$10^5$']
-    pic_enc(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 1.5, 10.5, "Model Dimension (x10\u2074)", "Verification communication (MB)",
+    pic_verification(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 1.5, 10.5, "Model Dimension (x10\u2074)", "Verification communication (MB)",
                 "vs_ver_com_model.pdf")
     
 
