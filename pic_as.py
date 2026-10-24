@@ -77,8 +77,8 @@ def pic_verification(x_ticks, y_ticks, y_visual, y1, y2, y3, y4, y5, x_min, x_ma
 
 def pic_total(x_ticks, y_ticks, y_visual, y1, y2, y3, x_min, x_max, x_label, y_lable, fig_name):
     # 创建图形和轴
-    fig, ax = plt.subplots(dpi = 1000, figsize=(6, 5))
-    plt.subplots_adjust(0.14, 0.13, 0.98, 0.98)
+    fig, ax = plt.subplots(dpi = 1000, figsize=(6, 4))
+    plt.subplots_adjust(0.14, 0.14, 0.98, 0.98)
     # 设置轴的线条粗细
     ax.spines['bottom'].set_linewidth(2)  # 设置底部坐标轴的粗细
     ax.spines['left'].set_linewidth(2)  # 设置左边坐标轴的粗细
