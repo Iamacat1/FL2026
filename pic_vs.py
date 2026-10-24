@@ -4,8 +4,8 @@ import numpy as np
 from matplotlib.ticker import FixedLocator, FixedFormatter
 
 def pic_verification(x_ticks, y_ticks, y_visual, y1, y2, y3, y4, y5, x_min, x_max, x_label, y_lable, fig_name):
-    fig, ax = plt.subplots(dpi=1000, figsize=(6, 5))
-    plt.subplots_adjust(0.14, 0.13, 0.98, 0.98)
+    fig, ax = plt.subplots(dpi=1000, figsize=(6, 4))
+    plt.subplots_adjust(0.14, 0.14, 0.98, 0.98)
 
     ax.spines['bottom'].set_linewidth(2)
     ax.spines['left'].set_linewidth(2)
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     x1 = [20, 40, 60, 80, 100]
     y_ticks = [0, 1, 10, 100, 1000, 10000, 100000]
     y_visual = [0, 1, 10, r'$10^2$', r'$10^3$', r'$10^4$', r'$10^5$']
-    pic_verification(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 15, 105, "Client Number", "Verification communication (MB)",
+    pic_verification(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 15, 105, "Client Number", "Verification Comm. (MB)",
                 "vs_ver_com_client.pdf")
     
     # ------验证服务器验证通信开销对比，客户端100，模型维度2-10w------
@@ -178,7 +178,7 @@ if __name__ == '__main__':
     x1 = [2, 4, 6, 8, 10]
     y_ticks = [0, 1, 10, 100, 1000, 10000, 100000]
     y_visual = [0, 1, 10, r'$10^2$', r'$10^3$', r'$10^4$', r'$10^5$']
-    pic_verification(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 1.5, 10.5, "Model Dimension (x10\u2074)", "Verification communication (MB)",
+    pic_verification(x1, y_ticks, y_visual, case1, case212, case222, FSMSA_Initiator, VeSAFL, 1.5, 10.5, "Model Dimension (x10\u2074)", "Verification Comm. (MB)",
                 "vs_ver_com_model.pdf")
     
 
