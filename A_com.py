@@ -25,6 +25,9 @@ class Communication:
         self.as_share_bit = self.vs_share_bit
 
     def com_client1(self):
+        # 初始化种子
+        ini = (self.client_num) * RAND_BIT
+        print("客户端初始化通信开销:", (ini)/8/1024, "KB")
         # 上传梯度和签名
         r0 = self.client_upload_gra
         print("客户端第0轮通信开销:", (r0)/8/1024, "KB")
@@ -37,7 +40,7 @@ class Communication:
         # 收到VS重签名后的中间聚合结果
         r3 = self.agg_grad + SIG_BIT
         print("客户端第3轮通信开销:", (r3)/8/1024, "KB")
-        return r0+ r1 + r2 + r3
+        return ini + r0 + r1 + r2 + r3
 
     def verify_com_client1(self):
         r0 = SIG_BIT
@@ -47,6 +50,9 @@ class Communication:
         return r0 + r1 + r2 + r3
 
     def com_client2_1_1(self):
+        # 初始化种子
+        ini = (self.client_num) * RAND_BIT
+        print("客户端初始化通信开销:", (ini)/8/1024, "KB")
         # 上传梯度和签名
         r0 = self.client_upload_gra
         print("客户端第0轮通信开销:", (r0)/8/1024, "KB")
@@ -60,7 +66,7 @@ class Communication:
         receive_as_agg = self.agg_grad
         r5 = receive_bit + receive_as_agg
         print("客户端第5轮通信开销:", (r5)/8/1024, "KB")
-        return r0 + r1 + r2 + r5
+        return ini + r0 + r1 + r2 + r5
     
     def verify_com_client2_1_1(self):
         r0 = SIG_BIT
@@ -77,6 +83,9 @@ class Communication:
         return self.verify_com_client2_1_1()
 
     def com_client2_2_1(self):
+        # 初始化种子
+        ini = (self.client_num) * RAND_BIT
+        print("客户端初始化通信开销:", (ini)/8/1024, "KB")
         # 上传梯度和签名
         r0 = self.client_upload_gra
         print("客户端第0轮通信开销:", (r0)/8/1024, "KB")
@@ -90,7 +99,7 @@ class Communication:
         request_bit = self.agg_grad + SIG_BIT
         r5 = receive_bit + request_bit
         print("客户端第5轮通信开销:", (r5)/8/1024, "KB")
-        return r0 + r1 + r2 + r5
+        return ini + r0 + r1 + r2 + r5
 
     def verify_com_client2_2_1(self):
         r0 = SIG_BIT
@@ -100,6 +109,9 @@ class Communication:
         return r0 + r1 + r2 + r5
 
     def com_client2_2_2(self):
+        # 初始化种子
+        ini = (self.client_num) * RAND_BIT
+        print("客户端初始化通信开销:", (ini)/8/1024, "KB")
         # 上传梯度和签名
         r0 = self.client_upload_gra
         print("客户端第0轮通信开销:", (r0)/8/1024, "KB")
@@ -114,7 +126,7 @@ class Communication:
         request_vs_agg_bit = self.agg_grad
         r5 = receive_bit + request_bit + request_vs_agg_bit
         print("客户端第5轮通信开销:", (r5)/8/1024, "KB")
-        return  r0 + r1 + r2 + r5
+        return  ini + r0 + r1 + r2 + r5
     
     def verify_com_client2_2_2(self):
         return self.verify_com_client2_2_1()
@@ -127,6 +139,9 @@ class Communication:
         return receive_client_bit + send_to_as_bit + receive_as_bit
 
     def com_vs_1(self):
+        # 初始化材料
+        ini = (self.client_num * RAND_BIT + 2*INDEX_BIT + 2*SIG_BIT)*self.client_num
+        print("VS初始化通信开销:", (ini)/8/1024/1024, "MB")
         receive_client_bit = self.client_upload_gra * self.client_num
         send_to_as_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
         # VS发送给所有客户端的分享的总位数
@@ -137,7 +152,7 @@ class Communication:
         send_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
         r3 = receive_as_bit + send_bit
         print("VS第3轮通信开销:", (r3)/8/1024/1024, "MB")
-        return r1 + r3
+        return ini + r1 + r3
 
     def verify_com_vs_1(self):
         r1 = SIG_BIT * (self.client_num + 2*self.client_num + (self.client_num + 1)*self.client_num)
@@ -145,6 +160,9 @@ class Communication:
         return r1 + r3
 
     def com_vs_2_1_2(self):
+        # 初始化材料
+        ini = (self.client_num * RAND_BIT + 2*INDEX_BIT + 2*SIG_BIT)*self.client_num
+        print("VS初始化通信开销:", (ini)/8/1024/1024, "MB")
         receive_client_bit = self.client_upload_gra * self.client_num
         send_to_as_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
         # VS发送给所有客户端的分享的总位数
@@ -158,7 +176,7 @@ class Communication:
         # VS发送自己的聚合结果给所有客户端
         r5 = self.agg_grad * self.client_num
         print("VS第5轮通信开销:", (r5)/8/1024/1024, "MB")
-        return r1 + r3 + r5
+        return ini + r1 + r3 + r5
 
     def verify_com_vs_2_1_2(self):
         r1 = SIG_BIT * (self.client_num + 2*self.client_num + (self.client_num + 1)*self.client_num)
@@ -167,6 +185,9 @@ class Communication:
         return r1 + r3 + r5
 
     def com_vs_2_2_2(self):
+        # 初始化材料
+        ini = (self.client_num * RAND_BIT + 2*INDEX_BIT + 2*SIG_BIT)*self.client_num
+        print("VS初始化通信开销:", (ini)/8/1024/1024, "MB")
         receive_client_bit = self.client_upload_gra * self.client_num
         send_to_as_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
         # VS发送给所有客户端的分享的总位数
@@ -182,12 +203,15 @@ class Communication:
         send_agg_bit = self.agg_grad * self.client_num
         r5 = send_as_agg_bit + send_agg_bit
         print("VS第5轮通信开销:", (r5)/8/1024/1024, "MB")
-        return r1 + r3 + r5
+        return ini + r1 + r3 + r5
 
     def verify_com_vs_2_2_2(self):
         return self.verify_com_vs_2_1_2()
 
     def com_as_1(self):
+        # 初始化材料
+        ini = (self.client_num * RAND_BIT + 2*INDEX_BIT + 2*SIG_BIT)*self.client_num
+        print("AS初始化通信开销:", (ini)/8/1024/1024, "MB")
         # 收到VS发送的每个客户端的梯度和重签名
         receive_vs_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
         # 聚合结果
@@ -196,13 +220,16 @@ class Communication:
         send_to_client_share_bit = (self.as_share_bit + SIG_BIT) * self.client_num
         r2 = receive_vs_bit + send_vs_bit + send_to_client_share_bit
         print("AS第2轮通信开销:", (r2)/8/1024/1024, "MB")
-        return r2
+        return ini + r2
     
     def verify_com_as_1(self):
         r2 = SIG_BIT * (2 * self.client_num + 1 + (self.client_num + 1)*self.client_num)
         return r2
 
     def com_as_2_1_1(self):
+        # 初始化材料
+        ini = (self.client_num * RAND_BIT + 2*INDEX_BIT + 2*SIG_BIT)*self.client_num
+        print("AS初始化通信开销:", (ini)/8/1024/1024, "MB")
         # 收到VS发送的每个客户端的梯度和重签名
         receive_vs_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
         # 聚合结果
@@ -218,7 +245,7 @@ class Communication:
         print("AS第4轮通信开销:", (r4)/8/1024/1024, "MB")
         r5 = self.agg_grad * self.client_num
         print("AS第5轮通信开销:", (r5)/8/1024/1024, "MB")
-        return r2 + r4 + r5
+        return ini + r2 + r4 + r5
     
     def verify_com_as_2_1_1(self):
         r2 = SIG_BIT * (2 * self.client_num + 1 + (self.client_num + 1)*self.client_num)
@@ -231,6 +258,9 @@ class Communication:
         
 
     def com_as_2_2_1(self):
+        # 初始化材料
+        ini = (self.client_num * RAND_BIT + 2*INDEX_BIT + 2*SIG_BIT)*self.client_num
+        print("AS初始化通信开销:", (ini)/8/1024/1024, "MB")
         # 收到VS发送的每个客户端的梯度和重签名
         receive_vs_bit = (self.client_upload_gra + SIG_BIT) * self.client_num
         # 聚合结果
@@ -243,7 +273,7 @@ class Communication:
         send_client_bit = (receive_proof_bit + SIG_BIT) * self.client_num
         r4 = receive_proof_bit + send_client_bit
         print("AS第4轮通信开销:", (r4)/8/1024/1024, "MB")
-        return r2 + r4
+        return ini + r2 + r4
 
     def verify_com_as_2_2_1(self):
         r2 = SIG_BIT * (2 * self.client_num + 1 + (self.client_num + 1)*self.client_num)
@@ -274,33 +304,33 @@ if __name__ == "__main__":
         # print("case1 客户端通信开销:", com.com_client1()/8/1024, "KB")
         # print("case1 VS通信开销:", com.com_vs_1()/8/1024/1024, "MB")
         # print("case1 AS通信开销:", com.com_as_1()/8/1024/1024, "MB")
-        client_1.append(com.verify_com_client1()/8/1024/1024)
-        vs_1.append(com.verify_com_vs_1()/8/1024/1024)
-        as_1.append(com.verify_com_as_1()/8/1024/1024)
+        client_1.append(com.com_client1()/8/1024/1024)
+        vs_1.append(com.com_vs_1()/8/1024/1024)
+        as_1.append(com.com_as_1()/8/1024/1024)
 
         print("case2-1-1---------------------")
         # print("case2-1-1 客户端通信开销:", com.com_client2_1_1()/8/1024, "KB")
         # print("case2-1-1 AS通信开销:", com.com_as_2_1_1()/8/1024/1024, "MB")
-        client_211.append(com.verify_com_client2_1_1()/8/1024/1024)
-        as_211.append(com.verify_com_as_2_1_1()/8/1024/1024)
+        client_211.append(com.com_client2_1_1()/8/1024/1024)
+        as_211.append(com.com_as_2_1_1()/8/1024/1024)
 
         print("case2-1-2---------------------")
         # print("case2-1-2 客户端通信开销:", com.com_client2_1_2()/8/1024, "KB")
         # print("case2-1-2 VS通信开销:", com.com_vs_2_1_2()/8/1024/1024, "MB")
-        client_212.append(com.verify_com_client2_1_2()/8/1024/1024)
-        vs_212.append(com.verify_com_vs_2_1_2()/8/1024/1024)
+        client_212.append(com.com_client2_1_2()/8/1024/1024)
+        vs_212.append(com.com_vs_2_1_2()/8/1024/1024)
 
         print("case2-2-1---------------------")
         # print("case2-2-1 客户端通信开销:", com.com_client2_2_1()/8/1024, "KB")
         # print("case2-2-1 AS通信开销:", com.com_as_2_2_1()/8/1024/1024, "MB")
-        client_221.append(com.verify_com_client2_2_1()/8/1024/1024)
-        as_221.append(com.verify_com_as_2_2_1()/8/1024/1024)
+        client_221.append(com.com_client2_2_1()/8/1024/1024)
+        as_221.append(com.com_as_2_2_1()/8/1024/1024)
 
         print("case2-2-2---------------------")
         # print("case2-2-2 客户端通信开销:", com.com_client2_2_2()/8/1024, "KB")
         # print("case2-2-2 VS通信开销:", com.com_vs_2_2_2()/8/1024/1024, "MB")
-        client_222.append(com.verify_com_client2_2_2()/8/1024/1024)
-        vs_222.append(com.verify_com_vs_2_2_2()/8/1024/1024)
+        client_222.append(com.com_client2_2_2()/8/1024/1024)
+        vs_222.append(com.com_vs_2_2_2()/8/1024/1024)
     print("客户端开销-----------------------------")
     print("case1=", client_1)
     print("case211=", client_211)
